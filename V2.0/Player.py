@@ -15,3 +15,4 @@ class Player:
 
         self.Mana = 10000
         self.HP = 1000  #Could be changed
+        
