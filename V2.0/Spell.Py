@@ -360,7 +360,7 @@ def ApplyTranspose(Player, Enemy):
 #Special Effect of Spells when casted
 
 def DespairCast(Player, Enemy):
-    player.Mana = 0
+    Player.Mana = 0
 
 def Thunder3Cast(Player, Enemy):
     Player.DOTList.append(T3DOT)
