@@ -33,7 +33,7 @@ class Spell:
 
         #Checks if we meet the spell requirement
         for Requirement in tempSpell.Requirement:
-            if(not Requirement(player, self)) : #Requirements return both weither it can be casted and will take away whatever value needs to be reduced to cast
+            if(not Requirement(player, self)) : #Requirements return both whether it can be casted and will take away whatever value needs to be reduced to cast
                 raise FailedToCast("Failed to cast the spell")
         return tempSpell
 
@@ -41,7 +41,7 @@ class Spell:
 
 
     def CastFinal(self, player, Enemy):
-        print("Spell has finally ben casted : " + str(self.id))
+        print("Spell has finally been casted : " + str(self.id))
         self.Effect(player, Enemy)#Put effects on Player and/or Enemy
         #This will include substracting the mana (it has been verified before that the mana was enough)
         
@@ -397,3 +397,77 @@ Sharp = BLMSpell(14, False, 0.5, 0, 0, 0, False, False, ApplySharpCast, [SharpCa
 Ley = BLMSpell(15, False, 0.5, 0, 0, 0, False, False, ApplyLeyLines, [LeyLinesRequirement])
 Transpo = BLMSpell(16, False, 0, 0, 0, 0, False, False, ApplyTranspose, [TransposeRequirement])
 Mana = BLMSpell(17, False, 0.5, 0, 0, 0, False, False, ApplyManaFront, [ManaFrontRequirement])
+
+
+
+
+#####################################
+#####################################
+
+class DRKSkill(Spell):
+    def __init__(self, id, GCD, CastTime, RecastTime, Potency, ManaCost, Effect, Requirement):
+        super().__init__(id, GCD, CastTime, RecastTime, Potency, ManaCost, Effect, Requirement)#Calls constructor of Spell
+
+def EdgeShadowEffect(Player, Spell):
+    Player.Darkside = min(60, Player.Darkside + 30)
+    Player.EdgeShadowCD = 2
+
+def FloodShadowEffect(Player, Spell):
+    Player.Darkside = min(60, Player.Darkside + 30)
+    Player.FloodShadowCD = 2
+
+def CarveSpitEffect(Player, Spell):
+    Player.Mana += 600
+
+def SyphonEffect(Player, Spell):
+    Player.Mana += 600
+
+def BloodWeaponEffect(Player, Spell):
+    if Spell.GCD:
+        Player.Mana += 600
+        Player.Blood += 10
+
+
+def BloodWeaponCheck(Player, Spell):
+    if Player.BloodWeaponTimer <= 0:                #Removes effect once duration has finished
+        Player.EffectList.remove(BloodWeaponEffect)
+        Player.EffectCDList.remove(BloodWeaponCheck)
+
+
+def ApplySyphonEffect(Player, Spell):
+
+
+def ApplyBloodWeapon(Player, Spell):
+    Player.BloodWeaponCD = 60
+    Player.EffectList.append(BloodWeaponEffect)
+    Player.BloodWeaponTimer = 10                    #Adds 10s to Blood Weapon buff timer
+    Player.EffectCDList.append(BloodWeaponCheck)
+
+
+
+#Weaponskills ie GCDs
+
+#Consider combo effect?
+
+HardSlash = DRKSkill(1, True, 0, 2.43, 200, 0, empty,[])
+SyphonStrike = DRKSkill(2, True, 0, 2.43, 270, 0, ApplySyphonEffect,[])
+Souleater = DRKSkill(3, True, 0, 2.43, 330, 0, [RestoreHP,[])
+Bloodspiller = DRKSkill(4, True, 0, 2.43, 600, 0, ,[BloodGauge])
+Unmend = DRKSkill(5, True, 0, 2.50, 150, 0, [EnhancedPlunge], [])
+
+#Buffs
+
+BloodWeapon = DRKSkill(6, False, 0.5, 0, 0, 0, ApplyBloodWeapon,[])
+Delirium = DRKSkill(7, False, 0.5, 60, 0, 0, [Delirium], [])
+
+#Abilities
+
+EdgeShadow = DRKSkill(8, False, 0.5, 2, 400, 3000, Darkside, [ManaRequirement])
+FloodShadow = DRKSkill(9, False, 0.5, 2, 160, 3000, Darkside, [ManaRequirement])
+CarveSpit = DRKSkill(10, False, 0.5, 60, 360, 0, CarveSpitEffect,[])
+AbyssalDrain = DRKSkill(11, False, 0.5, 60, 150, 0, empty,[])
+SaltedEarth = DRKSkill(12, False, 0.5, 90, 60, 0, SaltedEarth,[])
+SaltDarkness = DRKSkill(13, False, 0.5, 15, 500, 0, empty, [SaltedEarth])
+Shadowbringer = DRKSkill(14, False, 0.5, 60, 600, 0, empty, [Darkside])
+Plunge = DRKSkill(15, False, 0.7, 30, 150, empty, [])
+

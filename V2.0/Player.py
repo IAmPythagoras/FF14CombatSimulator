@@ -101,3 +101,41 @@ class BlackMage(Player):
         if (self.T3Timer > 0) : self.T3Timer = max(0,self.T3Timer - time)
         if (self.AFUITimer > 0) : self.AFUITimer = max(0, self.AFUITimer-time)
 
+#########################################
+#########################################
+
+class DarkKnight(Player):
+    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList):
+        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList)
+
+        #Special
+        self.Darkside = 0       #Darkside gauge (max duration of 60s)
+        self.Blood = 0          #Blood Gauge
+
+        #Buffs
+        self.BloodWeaponTimer = 0    #Blood Weapon buff (duration of 10s)
+        self.Delirium = 0       #Stacks of Delirium (3 stacks, duration of 30s)
+
+        #Other stuff
+        self.SaltedEarth = 0    #Salted Earth duration, required to use Salt and Darkness)
+        self.Plunge = 2         #Stacks of Plunge
+
+        #Ability cooldowns
+        self.EdgeShadowCD = 0
+        self.FloodShadowCD = 0
+
+        #BW, Delirium, CS, AD etc
+
+        self.BloodWeaponCD = 0
+
+        #Ability effects
+
+        #Procs
+        self.DarkArts           #Dark Arts gauge (when TBN breaks)
+
+
+
+
+
+        
+
