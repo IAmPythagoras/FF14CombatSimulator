@@ -471,3 +471,8 @@ SaltDarkness = DRKSkill(13, False, 0.5, 15, 500, 0, empty, [SaltedEarth])
 Shadowbringer = DRKSkill(14, False, 0.5, 60, 600, 0, empty, [Darkside])
 Plunge = DRKSkill(15, False, 0.7, 30, 150, empty, [])
 
+#Bruh we have to check when we getting married in FF so I can get free mount.
+#Also
+#    /   .  \
+#   (  .     )
+#    \   O  /
