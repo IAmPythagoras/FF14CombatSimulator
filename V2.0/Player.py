@@ -2,7 +2,7 @@ class Player:
 
     #This class will contain any relevant information to the player. It will be the mother of all other Player
 
-    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList):
+    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight):
 
         self.GCDTimer = GCDTimer    #How long a GCD is
         self.ActionSet = ActionSet  #Known Action List
@@ -13,6 +13,7 @@ class Player:
         self.NextSpell = 0
         self.CastingSpell = []
         self.CastingTarget = []
+        self.CurrentFight = CurrentFight
 
         self.TrueLock = False   #Used to know when a player has finished all of its ActionSet
         self.Casting = False    #used to know if an action is possible
@@ -54,8 +55,8 @@ class Player:
 class BlackMage(Player):
     #This class will be blackmage object and will be the one used to simulate a black mage
 
-    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList):
-        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList)
+    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight):
+        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight)
 
         #Special
         self.AstralFireStack = 0
@@ -108,20 +109,20 @@ class BlackMage(Player):
 class DarkKnight(Player):
     #A class for Dark Knight Players containing all effects and cooldowns relevant to the job.
 
-    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList):
-        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList)
+    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight):
+        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight)
 
         #Special
         self.DarksideTimer = 0          #Darkside Gauge, starts at 0 with a max duration of 60s.
         self.Blood = 0                  #Blood Gauge, starts at 0 with a max of 100 units.
 
         #Stacks and Ability timers
-        self.BloodWeaponTimer = 0       #Blood Weapon buff.
+        self.BloodWeaponTimer = 0       #Duration of Blood Weapon buff.
         self.DeliriumStacks = 0         #Stacks of Delirium.
         self.DeliriumTimer = 0          #Duration of Delirium stacks.
-        self.SaltedTimer = 0            #Salted Earth duration, required to use Salt and Darkness
-        self.PlungeStacks = 2           #Stacks of Plunge
+        self.SaltedTimer = 0            #Salted Earth duration, required to use Salt and Darkness.
         self.ShadowbringerStacks = 2    #Stacks of Shadowbringer
+        self.PlungeStacks = 2           #Stacks of Plunge
         self.DarkArts = False           #Dark Arts Gauge, activates when TBN breaks.
 
         #Cooldowns for all abilities, starting at 0 and adjusted by Apply.
@@ -138,23 +139,35 @@ class DarkKnight(Player):
         self.LivingShadowCD = 0         #120s
         self.PlungeCD = 0               #30s charge
         
+    def updateCD(self, time):
+        if (self.BloodWeaponCD > 0) : self.BloodWeaponCD = max(0,self.BloodWeaponCD - time)
+        if (self.DeliriumCD > 0) :self.DeliriumCD = max(0,self.DeliriumCD - time)
+        if (self.EdgeShadowCD > 0) :self.EdgeShadowCD = max(0,self.EdgeShadowCD - time)
+        if (self.FloodShadowCD > 0) :self.FloodShadowCD = max(0,self.FloodShadowCD - time)
+        if (self.CarveSpitCD > 0) :self.CarveSpitCD = max(0,self.CarveSpitCD - time)
+        if (self.AbyssalDrainCD > 0) :self.AbyssalDrainCD = max(0,self.AbyssalDrainCD - time)
+        if (self.SaltedEarthCD > 0) :self.SaltedEarthCD = max(0,self.SaltedEarthCD - time)
+        if (self.SaltDarknessCD > 0) :self.SaltDarknessCD = max(0,self.SaltDarknessCD - time)
+        if (self.ShadowbringerCD > 0) :self.ShadowbringerCD = max(0,self.ShadowbringerCD - time)
+        if (self.LivingShadowCD > 0) :self.LivingShadowCD = max(0,self.LivingShadowCD - time)
+        if (self.PlungeCD > 0) :self.PlungeCD = max(0,self.PlungeCD - time)
 
+    def updateTimer(self, time):
+        super().updateTimer(time)
 
-# AbyssalDrain 17.50	300p
-# Plunge       19.86	300p
-# Quietus      22.22	300p
-# Shadowbringer24.58	450p
-# Edge         26.95	300p
-# Bloodspiller 29.31	300p
-# CarveSpit    31.68	300p
+class Esteem(Player):
+    #A class for Living Shadow pet, summoned by Living Shadow.
 
-# has about 6 seconds of animation lock before it starts attacking.
-# there is a 2.36s interval between each ability. in order to attack,
-# player needs a target. this is important because if there is no
-# target, LS will not perform its rotation and will just idle.
-# if a target is engaged, LS will begin its rotation, but will not
-# use all the skills since its timer will end.
+    def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight):
+        super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList, CurrentFight)
 
+        self.Blood = 0
+
+    def updateCD(self, time):
+        pass
+
+    def updateTimer(self, time):
+        super().updateTimer(time)
 
         
 

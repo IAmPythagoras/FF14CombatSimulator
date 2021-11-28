@@ -1,3 +1,5 @@
+import math
+
 class NoMoreAction(Exception):#Exception called if a spell fails to cast
     pass
 
@@ -14,10 +16,10 @@ class Fight:
 
         for player in self.PlayerList:
             print("The Total Potency done by player " + str(type(player)) + " was : " + str(player.TotalPotency))
-            print("This same player had a Potency Per Second of : " + str(player.TotalPotency/time))
+            print("This same player had a Potency Per Second of: " + str(player.TotalPotency/time))
         
-        print("The Enemy has received a total potency of : " + str(self.Enemy.TotalPotency))
-        print("The Potency Per Second on the Enemy is : " + str(self.Enemy.TotalPotency/time))
+        print("The Enemy has received a total potency of: " + str(self.Enemy.TotalPotency))
+        print("The Potency Per Second on the Enemy is: " + str(self.Enemy.TotalPotency/time))
 
 
 
@@ -43,7 +45,6 @@ class Fight:
 
                                 player.CastingSpell = player.ActionSet[player.NextSpell].Cast(player, self.Enemy)#Cast the spell
                                 #Locking the player
-                                print("Potency of spell : " + str(player.CastingSpell.Potency))
                                 player.Casting = True
                                 player.CastingLockTimer = player.CastingSpell.CastTime
                                 player.GCDLock = True
@@ -84,11 +85,12 @@ class Fight:
                     CheckFinalLock = player.TrueLock and CheckFinalLock
 
                 if CheckFinalLock: 
+                    print("The Fight finishes at: " + str(TimeStamp))
                     break
 
 
                 #update timestamp
-
+                #if(math.floor(TimeStamp*100)%10 == 0) : print(str(TimeStamp))
                 TimeStamp += TimeUnit
 
             self.PrintResult(TimeStamp)

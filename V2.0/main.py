@@ -1,6 +1,6 @@
 from Fight import *
 from Spell import *
-from Player import *
+
 from Enemy import *
 
 
@@ -8,11 +8,12 @@ Dummy = Enemy()
 
 Action = [F3, Eno, T3, F4, F4]
 PrePull = []
+Event = Fight([], Dummy)
+DRKAction = [Unmend, EdgeShadow, BloodWeapon, HardSlash, FloodShadow, SyphonStrike, EdgeShadow, Souleater, LivingShadow, HardSlash]
 
-BLMPlayer = BlackMage(2.17, Action, PrePull, [AstralFire, UmbralIce])
+DRKPlayer = DarkKnight(2.36, DRKAction, [], [DarksideEffect],Event)
 
-Event = Fight([BLMPlayer], Dummy)
-Event.SimulateFight(0.01, 15)
+Event.PlayerList = [DRKPlayer]
 
-
+Event.SimulateFight(0.01, 100)
 
