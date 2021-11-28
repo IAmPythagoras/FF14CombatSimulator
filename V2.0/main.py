@@ -9,7 +9,7 @@ Dummy = Enemy()
 Action = [F3, Eno, T3, F4, F4]
 PrePull = []
 Event = Fight([], Dummy)
-DRKAction = [Unmend, EdgeShadow, BloodWeapon, HardSlash, FloodShadow, SyphonStrike, EdgeShadow, Souleater, LivingShadow, HardSlash]
+DRKAction = [HardSlash, SaltedEarth]
 
 DRKPlayer = DarkKnight(2.36, DRKAction, [], [DarksideEffect],Event)
 

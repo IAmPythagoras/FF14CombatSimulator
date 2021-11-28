@@ -120,7 +120,7 @@ class DarkKnight(Player):
         self.BloodWeaponTimer = 0       #Duration of Blood Weapon buff.
         self.DeliriumStacks = 0         #Stacks of Delirium.
         self.DeliriumTimer = 0          #Duration of Delirium stacks.
-        self.SaltedTimer = 0            #Salted Earth duration, required to use Salt and Darkness.
+        self.SaltedEarthTimer = 0            #Salted Earth duration, required to use Salt and Darkness.
         self.ShadowbringerStacks = 2    #Stacks of Shadowbringer
         self.PlungeStacks = 2           #Stacks of Plunge
         self.DarkArts = False           #Dark Arts Gauge, activates when TBN breaks.

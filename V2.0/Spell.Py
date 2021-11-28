@@ -481,7 +481,7 @@ def SaltedEarthRequirement(Player, Spell):
     return False
 
 def SaltDarknessRequirement(Player, Spell):
-    if Player.SaltedTimer > 0:
+    if Player.SaltedEarthTimer > 0:
         return True
     return False
 
@@ -495,18 +495,20 @@ def PlungeRequirement(Player, Spell):
         Player.PlungeStacks -= 1
 
 
-
 #Effect functions that persist after action use
 
 def BloodWeaponEffect(Player, Spell):
     if Spell.GCD:
         Player.Mana = min(Player.Mana + 600, 10000)
+        print('+600 MP')
         Player.Blood = min(100, Player.Blood + 10)
+        print('+10 Blood')
 
 def DeliriumEffect(Player, Spell):
     if (Spell.id == 4 or 5):
         Player.DeliriumStacks -= 1
         Player.Mana = min(Player.Mana + 200, 10000)
+        print('+200 MP')
 
     if (Player.DeliriumStacks == 0):
         Player.EffectList.remove(DeliriumEffect)
@@ -522,6 +524,12 @@ def DeliriumCheck(Player, Spell):
     if Player.DeliriumTimer <= 0 or Player.DeliriumStacks == 0:     #Removes effect once duration has finished.
         Player.EffectList.remove(DeliriumEffect)
         Player.EffectCDList.remove(DeliriumCheck)
+
+def SaltedEarthCheck(Player, Spell):
+    if Player.SaltedEarthTimer <= 0:
+        Player.DOTList.remove(SaltedEarthDOT)                       #Removes effect once duration has finished.
+        Player.SaltedEarthTimer = 0
+        Player.EffectCDList.remove(SaltedEarthCheck)
 
 
 #Apply effects that happen upon action use
@@ -562,11 +570,16 @@ def ApplyCarveSpitEffect(Player, Spell):
 #       Player.HP +=               Cure potency of 200.
 
 def ApplySaltedEarth(Player, Spell):
-    Player.SaltedTimer = 15
+    Player.SaltedEarthTimer = 15
+    Player.DOTList.append(SaltedEarthDOT)
+    Player.SaltedEarthCD = 90
+
+def ApplySaltDarknessEffect(Player, Spell):
+    Player.SaltDarknessCD = 15
 
 def SummonLivingShadow(Player, Spell):
     Actions = [PDelay, PAbyssalDrain, PPlunge, PQuietus, PShadowbringer, PEdgeShadow, PBloodspiller, PCarveSpit]
-    Pet = Esteem(2.36,Actions,[],[],Player.CurrentFight)
+    Pet = Esteem(2.36,Actions,[],[],Player.CurrentFight)    #Creates a Player of class Esteem and adds it to the current fight.
     Player.CurrentFight.PlayerList.append(Pet)
     print("Esteem enters the battlefield.")
 
@@ -595,19 +608,20 @@ EdgeShadow = DRKSkill(9, False, 0.5, 0, 400, 3000, 0, ApplyEdgeShadowEffect, [Ed
 FloodShadow = DRKSkill(10, False, 0.5, 0, 160, 3000, 0, ApplyFloodShadowEffect, [FloodShadowRequirement])
 CarveSpit = DRKSkill(11, False, 0.5, 0, 360, 0, 0, ApplyCarveSpitEffect, [CarveSpitRequirement])
 AbyssalDrain = DRKSkill(12, False, 0.5, 0, 150, 0, 0, empty, [AbyssalDrainRequirement])
-#SaltedEarth = DRKSkill(13, False, 0.5, 0, 60, 0, 0, ApplySaltedEarth, [SaltedEarthRequirement]) #Ground target DOT, ticks once upon placement
-#SaltDarkness = DRKSkill(14, False, 0.5, 0, 500, 0, 0, 0, empty, [SaltDarknessRequirement])
-#Shadowbringer = DRKSkill(15, False, 0.5, 0, 600, 0, 0, empty, [ShadowbringerRequirement])
-LivingShadow = DRKSkill(16, False, 0.5, 0, 0, 0, 50, SummonLivingShadow, [BloodRequirement])
-#Plunge = DRKSkill(17, False, 0.7, 0, 150, 0, 0, ApplyPlungeEffect, [PlungeRequirement])
+SaltedEarth = DRKSkill(13, False, 0.5, 0, 50, 0, 0, ApplySaltedEarth, [SaltedEarthRequirement]) #Ground target DOT, ticks once upon placement
+SaltedEarthDOT = DOTSpell(14, 50)   #The actual Salted Earth DOT
+SaltDarkness = DRKSkill(15, False, 0.5, 0, 500, 0, 0, empty, [SaltDarknessRequirement])
+Shadowbringer = DRKSkill(16, False, 0.5, 0, 600, 0, 0, empty, [ShadowbringerRequirement])
+LivingShadow = DRKSkill(17, False, 0.5, 0, 0, 0, 50, SummonLivingShadow, [BloodRequirement])
+#Plunge = DRKSkill(18, False, 0.7, 0, 150, 0, 0, ApplyPlungeEffect, [PlungeRequirement])
 
 #List of Abilities performed by Living Shadow.
 
-PAbyssalDrain = DRKSkill(18, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PPlunge = DRKSkill(19, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PQuietus = DRKSkill(20, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PShadowbringer = DRKSkill(21, True, 0.5, 2.36, 450, 0, 0, empty, [])
-PEdgeShadow = DRKSkill(22, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PBloodspiller = DRKSkill(23, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PCarveSpit = DRKSkill(24, True, 0.5, 2.36, 300, 0, 0, empty, [])
-PDelay = DRKSkill(25, True, 0, 4.50, 0, 0, 0, empty, [])
+PAbyssalDrain = DRKSkill(19, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PPlunge = DRKSkill(20, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PQuietus = DRKSkill(21, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PShadowbringer = DRKSkill(22, True, 0.5, 2.36, 450, 0, 0, empty, [])
+PEdgeShadow = DRKSkill(23, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PBloodspiller = DRKSkill(24, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PCarveSpit = DRKSkill(25, True, 0.5, 2.36, 300, 0, 0, empty, [])
+PDelay = DRKSkill(26, True, 0, 4.50, 0, 0, 0, empty, [])    #6s animation before it starts attacking.
