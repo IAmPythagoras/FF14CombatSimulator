@@ -102,39 +102,58 @@ class BlackMage(Player):
         if (self.AFUITimer > 0) : self.AFUITimer = max(0, self.AFUITimer-time)
 
 #########################################
+########## DARK KNIGHT PLAYER ###########
 #########################################
 
 class DarkKnight(Player):
+    #A class for Dark Knight Players containing all effects and cooldowns relevant to the job.
+
     def __init__(self, GCDTimer, ActionSet, PrePullSet, EffectList):
         super().__init__(GCDTimer, ActionSet, PrePullSet, EffectList)
 
         #Special
-        self.Darkside = 0       #Darkside gauge (max duration of 60s)
-        self.Blood = 0          #Blood Gauge
+        self.DarksideTimer = 0          #Darkside Gauge, starts at 0 with a max duration of 60s.
+        self.Blood = 0                  #Blood Gauge, starts at 0 with a max of 100 units.
 
-        #Buffs
-        self.BloodWeaponTimer = 0    #Blood Weapon buff (duration of 10s)
-        self.Delirium = 0       #Stacks of Delirium (3 stacks, duration of 30s)
+        #Stacks and Ability timers
+        self.BloodWeaponTimer = 0       #Blood Weapon buff.
+        self.DeliriumStacks = 0         #Stacks of Delirium.
+        self.DeliriumTimer = 0          #Duration of Delirium stacks.
+        self.SaltedTimer = 0            #Salted Earth duration, required to use Salt and Darkness
+        self.PlungeStacks = 2           #Stacks of Plunge
+        self.ShadowbringerStacks = 2    #Stacks of Shadowbringer
+        self.DarkArts = False           #Dark Arts Gauge, activates when TBN breaks.
 
-        #Other stuff
-        self.SaltedEarth = 0    #Salted Earth duration, required to use Salt and Darkness)
-        self.Plunge = 2         #Stacks of Plunge
+        #Cooldowns for all abilities, starting at 0 and adjusted by Apply.
 
-        #Ability cooldowns
-        self.EdgeShadowCD = 0
-        self.FloodShadowCD = 0
-
-        #BW, Delirium, CS, AD etc
-
-        self.BloodWeaponCD = 0
-
-        #Ability effects
-
-        #Procs
-        self.DarkArts           #Dark Arts gauge (when TBN breaks)
+        self.BloodWeaponCD = 0          #60s
+        self.DeliriumCD = 0             #60s
+        self.EdgeShadowCD = 0           #2s
+        self.FloodShadowCD = 0          #2s
+        self.CarveSpitCD = 0            #60s
+        self.AbyssalDrainCD = 0         #60s
+        self.SaltedEarthCD = 0          #90s
+        self.SaltDarknessCD = 0         #15s
+        self.ShadowbringerCD = 0        #60s charge
+        self.LivingShadowCD = 0         #120s
+        self.PlungeCD = 0               #30s charge
+        
 
 
+# AbyssalDrain 17.50	300p
+# Plunge       19.86	300p
+# Quietus      22.22	300p
+# Shadowbringer24.58	450p
+# Edge         26.95	300p
+# Bloodspiller 29.31	300p
+# CarveSpit    31.68	300p
 
+# has about 6 seconds of animation lock before it starts attacking.
+# there is a 2.36s interval between each ability. in order to attack,
+# player needs a target. this is important because if there is no
+# target, LS will not perform its rotation and will just idle.
+# if a target is engaged, LS will begin its rotation, but will not
+# use all the skills since its timer will end.
 
 
         
